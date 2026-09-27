@@ -1,0 +1,3399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MNHS Lost & Found</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+ --blue:#123f73;
+ --blue2:#2170b5;
+ --light:#f4f7fb;
+ --white:#fff;
+ --text:#172033;
+ --muted:#687386;
+ --border:#dce3ec;
+ --green:#198754;
+ --red:#dc3545;
+ --yellow:#f0ad00;
+}
+
+body{
+ font-family:Arial,Helvetica,sans-serif;
+ background:var(--light);
+ color:var(--text);
+ line-height:1.6;
+}
+
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+
+.container{
+ width:92%;
+ max-width:1150px;
+ margin:auto;
+}
+
+.navbar{
+ background:white;
+ border-bottom:1px solid var(--border);
+ position:sticky;
+ top:0;
+ z-index:1000;
+}
+
+.nav{
+ min-height:68px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+}
+
+.logo{
+ color:var(--blue);
+ font-size:19px;
+ font-weight:bold;
+}
+
+.logo small{
+ display:block;
+ color:var(--muted);
+ font-size:10px;
+}
+
+.navlinks{
+ display:flex;
+ gap:5px;
+ align-items:center;
+}
+
+.navlinks button,
+.navlinks a{
+ border:0;
+ background:none;
+ padding:9px 11px;
+ border-radius:7px;
+ font-size:14px;
+}
+
+.navlinks button:hover,
+.navlinks a:hover{
+ background:#edf4fb;
+ color:var(--blue);
+}
+
+.menu{
+ display:none;
+ border:0;
+ background:#edf4fb;
+ padding:8px 12px;
+ border-radius:7px;
+}
+
+.hero{
+ background:linear-gradient(135deg,var(--blue),var(--blue2));
+ color:white;
+ padding:75px 0;
+}
+
+.hero-grid{
+ display:grid;
+ grid-template-columns:1.3fr .7fr;
+ gap:35px;
+ align-items:center;
+}
+
+.hero h1{
+ font-size:clamp(38px,6vw,65px);
+ line-height:1.05;
+ margin-bottom:20px;
+}
+
+.hero p{
+ max-width:650px;
+ color:#e9f2fb;
+ font-size:17px;
+}
+
+.hero-card{
+ background:white;
+ color:var(--text);
+ padding:28px;
+ border-radius:17px;
+ box-shadow:0 15px 40px #0002;
+}
+
+.section{padding:50px 0}
+
+.title{margin-bottom:25px}
+.title h1,.title h2{margin-bottom:5px}
+.muted{color:var(--muted)}
+
+.btn{
+ display:inline-block;
+ border:0;
+ padding:10px 16px;
+ border-radius:8px;
+ font-weight:bold;
+ margin:4px;
+}
+
+.primary{background:var(--blue);color:white}
+.secondary{background:#e7edf4;color:var(--text)}
+.success{background:var(--green);color:white}
+.danger{background:var(--red);color:white}
+.warning{background:var(--yellow);color:#222}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:18px;
+}
+
+.card{
+ background:white;
+ border:1px solid var(--border);
+ border-radius:13px;
+ padding:20px;
+}
+
+.item-card{
+ background:white;
+ border:1px solid var(--border);
+ border-radius:14px;
+ overflow:hidden;
+}
+
+.item-img{
+ width:100%;
+ height:190px;
+ object-fit:cover;
+ background:#e7edf4;
+}
+
+.placeholder{
+ height:190px;
+ background:#e7edf4;
+ display:grid;
+ place-items:center;
+ font-size:45px;
+}
+
+.item-body{padding:17px}
+
+.badge{
+ display:inline-block;
+ padding:4px 9px;
+ border-radius:50px;
+ font-size:11px;
+ font-weight:bold;
+ margin:2px;
+}
+
+.lost{background:#ffecef;color:#b4232e}
+.found{background:#e8f7ef;color:#167044}
+.pending{background:#fff4d6;color:#916300}
+.approved{background:#e8f7ef;color:#167044}
+.rejected{background:#ffecef;color:#b4232e}
+.resolved{background:#e8eef8;color:var(--blue)}
+
+.filters{
+ background:white;
+ border:1px solid var(--border);
+ border-radius:12px;
+ padding:14px;
+ display:grid;
+ grid-template-columns:2fr 1fr 1fr 1fr auto;
+ gap:9px;
+ margin-bottom:25px;
+}
+
+input,select,textarea{
+ width:100%;
+ padding:11px;
+ border:1px solid #cdd5df;
+ border-radius:8px;
+ background:white;
+}
+
+textarea{
+ min-height:120px;
+ resize:vertical;
+}
+
+label{
+ display:block;
+ font-weight:bold;
+ font-size:14px;
+ margin:12px 0 5px;
+}
+
+.form{
+ background:white;
+ border:1px solid var(--border);
+ border-radius:14px;
+ padding:25px;
+ max-width:750px;
+ margin:auto;
+}
+
+.form-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px 18px;
+}
+
+.full{grid-column:1/-1}
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:15px;
+ margin-bottom:25px;
+}
+
+.stat{
+ background:white;
+ border:1px solid var(--border);
+ padding:20px;
+ border-radius:12px;
+}
+
+.stat strong{
+ display:block;
+ color:var(--blue);
+ font-size:30px;
+}
+
+.table{
+ background:white;
+ border:1px solid var(--border);
+ border-radius:12px;
+ overflow:auto;
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ min-width:700px;
+}
+
+th,td{
+ padding:11px;
+ border-bottom:1px solid var(--border);
+ text-align:left;
+}
+
+th{background:#edf2f7}
+
+.auth{
+ min-height:calc(100vh - 68px);
+ display:grid;
+ place-items:center;
+ padding:40px 0;
+}
+
+.auth-box{
+ background:white;
+ width:min(440px,94%);
+ padding:28px;
+ border-radius:15px;
+ border:1px solid var(--border);
+}
+
+.message{
+ padding:10px;
+ border-radius:7px;
+ margin:12px 0;
+ display:none;
+}
+
+.message.show{display:block}
+.message.ok{background:#e8f7ef;color:#167044}
+.message.err{background:#ffecef;color:#b4232e}
+
+.empty{
+ text-align:center;
+ padding:45px;
+ border:1px dashed #cbd3df;
+ border-radius:12px;
+ color:var(--muted);
+ grid-column:1/-1;
+}
+
+.detail{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:25px;
+}
+
+.detail img{
+ width:100%;
+ max-height:450px;
+ object-fit:cover;
+ border-radius:14px;
+}
+
+.footer{
+ background:#102f51;
+ color:#dce8f5;
+ padding:30px 0;
+ margin-top:40px;
+}
+
+.hide{display:none!important}
+
+.admin-head{
+ background:#182d45;
+ color:white;
+ padding:20px 0;
+}
+
+.admin-head h1{margin-bottom:3px}
+
+@media(max-width:850px){
+ .menu{display:block}
+
+ .navlinks{
+  display:none;
+  position:absolute;
+  top:68px;
+  left:0;
+  right:0;
+  background:white;
+  flex-direction:column;
+  padding:10px;
+  border-bottom:1px solid var(--border);
+ }
+
+ .navlinks.open{display:flex}
+
+ .navlinks a,.navlinks button{
+  width:100%;
+  text-align:left;
+ }
+
+ .hero-grid,.detail{grid-template-columns:1fr}
+
+ .grid{grid-template-columns:repeat(2,1fr)}
+
+ .stats{grid-template-columns:repeat(2,1fr)}
+
+ .filters{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:560px){
+ .grid,.stats,.form-grid,.filters{
+  grid-template-columns:1fr;
+ }
+
+ .hero{padding:50px 0}
+
+ .hero h1{font-size:42px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+<div class="container nav">
+
+<a class="logo" href="#" onclick="showPage('home')">
+ MNHS Lost & Found
+ <small>Marangal National High School</small>
+</a>
+
+<button class="menu" onclick="toggleMenu()">☰</button>
+
+<div class="navlinks" id="navlinks">
+
+<a href="#" onclick="showPage('home')">Home</a>
+<a href="#" onclick="showPage('browse')">Browse</a>
+<a href="#" onclick="showPage('lost')">Lost</a>
+<a href="#" onclick="showPage('found')">Found</a>
+<a href="#" onclick="showPage('how')">How It Works</a>
+<a href="#" onclick="showPage('about')">About</a>
+
+<a href="#" id="dashboardLink" class="hide"
+onclick="showPage('dashboard')">
+Dashboard
+</a>
+
+<a href="#" id="loginLink"
+onclick="showPage('login')">
+Login
+</a>
+
+<a href="#" id="registerLink"
+onclick="showPage('register')">
+Register
+</a>
+
+<a href="#" id="logoutLink" class="hide"
+onclick="logout()">
+Logout
+</a>
+
+</div>
+</div>
+</nav>
+
+
+<!-- ================= HOME ================= -->
+
+<section id="home" class="page">
+
+<div class="hero">
+<div class="container hero-grid">
+
+<div>
+
+<h1>
+Lost something?<br>
+Let's help you find it.
+</h1>
+
+<p>
+MNHS Lost & Found is a web-based system that helps
+students and school personnel report, search, and
+recover lost belongings in school.
+</p>
+
+<br>
+
+<button class="btn secondary"
+onclick="showPage('browse')">
+Browse Items
+</button>
+
+<button class="btn primary"
+onclick="requireLoginFor('report')">
+Report an Item
+</button>
+
+</div>
+
+<div class="hero-card">
+
+<h2>MNHS Lost & Found</h2>
+
+<p class="muted">
+A simple and organized way to manage lost and found
+items inside Marangal National High School.
+</p>
+
+<br>
+
+<b>Features</b>
+
+<ul>
+<li>Report lost or found items</li>
+<li>Browse approved reports</li>
+<li>Search and filter items</li>
+<li>Submit item claims</li>
+<li>Admin approval system</li>
+</ul>
+
+</div>
+
+</div>
+</div>
+
+<div class="section">
+
+<div class="container">
+
+<div class="title">
+<h2>How It Helps</h2>
+<p class="muted">Everything is organized in one place.</p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>📋 Report</h3>
+<p>Submit information about a lost or found item.</p>
+</div>
+
+<div class="card">
+<h3>🔎 Search</h3>
+<p>Search approved lost and found reports.</p>
+</div>
+
+<div class="card">
+<h3>🤝 Claim</h3>
+<p>Submit information to claim an item.</p>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</section>
+
+
+<!-- ================= BROWSE ================= -->
+
+<section id="browse" class="page section hide">
+
+<div class="container">
+
+<div class="title">
+<h1>Browse Items</h1>
+<p class="muted">
+Search approved lost and found reports.
+</p>
+</div>
+
+<div class="filters">
+
+<input
+id="search"
+placeholder="Search item name..."
+oninput="renderItems()">
+
+<select id="typeFilter" onchange="renderItems()">
+<option value="">All</option>
+<option value="Lost">Lost</option>
+<option value="Found">Found</option>
+</select>
+
+<select id="categoryFilter" onchange="renderItems()">
+<option value="">All Categories</option>
+<option>ID & Cards</option>
+<option>School Supplies</option>
+<option>Bags</option>
+<option>Clothing</option>
+<option>Electronics</option>
+<option>Accessories</option>
+<option>Other</option>
+</select>
+
+<select id="sortFilter" onchange="renderItems()">
+<option value="newest">Newest</option>
+<option value="oldest">Oldest</option>
+</select>
+
+<button class="btn secondary"
+onclick="clearFilters()">
+Clear
+</button>
+
+</div>
+
+<div id="itemsList" class="grid"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= LOST ================= -->
+
+<section id="lost" class="page section hide">
+
+<div class="container">
+
+<div class="title">
+<h1>Lost Items</h1>
+<p class="muted">
+Approved reports of lost belongings.
+</p>
+</div>
+
+<div class="filters">
+
+<input
+id="lostSearch"
+placeholder="Search lost item..."
+oninput="renderSpecial('Lost')">
+
+<select id="lostCategory"
+onchange="renderSpecial('Lost')">
+
+<option value="">All Categories</option>
+<option>ID & Cards</option>
+<option>School Supplies</option>
+<option>Bags</option>
+<option>Clothing</option>
+<option>Electronics</option>
+<option>Accessories</option>
+<option>Other</option>
+
+</select>
+
+</div>
+
+<div id="lostList" class="grid"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= FOUND ================= -->
+
+<section id="found" class="page section hide">
+
+<div class="container">
+
+<div class="title">
+<h1>Found Items</h1>
+<p class="muted">
+Approved reports of items found around school.
+</p>
+</div>
+
+<div class="filters">
+
+<input
+id="foundSearch"
+placeholder="Search found item..."
+oninput="renderSpecial('Found')">
+
+<select id="foundCategory"
+onchange="renderSpecial('Found')">
+
+<option value="">All Categories</option>
+<option>ID & Cards</option>
+<option>School Supplies</option>
+<option>Bags</option>
+<option>Clothing</option>
+<option>Electronics</option>
+<option>Accessories</option>
+<option>Other</option>
+
+</select>
+
+</div>
+
+<div id="foundList" class="grid"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= HOW ================= -->
+
+<section id="how" class="page section hide">
+
+<div class="container">
+
+<div class="title">
+<h1>How It Works</h1>
+<p class="muted">
+Simple steps for using MNHS Lost & Found.
+</p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h2>1. Register</h2>
+<p>
+Create an account using your name and username.
+</p>
+</div>
+
+<div class="card">
+<h2>2. Report</h2>
+<p>
+Submit details about your lost or found item.
+</p>
+</div>
+
+<div class="card">
+<h2>3. Approval</h2>
+<p>
+The administrator checks and approves the report.
+</p>
+</div>
+
+<div class="card">
+<h2>4. Browse</h2>
+<p>
+Approved reports become visible to users.
+</p>
+</div>
+
+<div class="card">
+<h2>5. Claim</h2>
+<p>
+If you recognize your item, submit a claim.
+</p>
+</div>
+
+<div class="card">
+<h2>6. Resolution</h2>
+<p>
+The administrator reviews the claim and resolves
+the item when appropriate.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= ABOUT ================= -->
+
+<section id="about" class="page section hide">
+
+<div class="container">
+
+<div class="title">
+<h1>About MNHS Lost & Found</h1>
+</div>
+
+<div class="card">
+
+<h2>Our Purpose</h2>
+
+<br>
+
+<p>
+The MNHS Lost & Found system was created to provide
+a more organized way of handling lost and found
+belongings within Marangal National High School.
+</p>
+
+<br>
+
+<p>
+Instead of depending only on handwritten records,
+bulletin board announcements, or verbal reports,
+the system provides a centralized web-based platform
+for reporting and searching items.
+</p>
+
+<br>
+
+<h3>School</h3>
+
+<p>
+Marangal National High School
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= LOGIN ================= -->
+
+<section id="login" class="page auth hide">
+
+<div class="auth-box">
+
+<h1>Login</h1>
+
+<p class="muted">
+Login to report an item or submit a claim.
+</p>
+
+<div id="loginMessage" class="message"></div>
+
+<form onsubmit="login(event)">
+
+<label>Username / Email</label>
+
+<input
+id="loginUsername"
+required>
+
+<label>Password</label>
+
+<input
+id="loginPassword"
+type="password"
+required>
+
+<br>
+
+<button class="btn primary" type="submit">
+Login
+</button>
+
+</form>
+
+<br>
+
+<p>
+No account?
+<a href="#" onclick="showPage('register')">
+Register here
+</a>
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ================= REGISTER ================= -->
+
+<section id="register" class="page auth hide">
+
+<div class="auth-box">
+
+<h1>Create Account</h1>
+
+<p class="muted">
+Register as an MNHS Lost & Found user.
+</p>
+
+<div id="registerMessage" class="message"></div>
+
+<form onsubmit="register(event)">
+
+<label>Full Name</label>
+
+<input id="regName" required>
+
+<label>Username</label>
+
+<input id="regUsername" required>
+
+<label>Password</label>
+
+<input
+id="regPassword"
+type="password"
+required>
+
+<label>Confirm Password</label>
+
+<input
+id="regConfirm"
+type="password"
+required>
+
+<br>
+
+<button class="btn primary" type="submit">
+Register
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+
+<!-- ================= REPORT ================= -->
+
+<section id="report" class="page section hide">
+
+<div class="container">
+
+<div class="title">
+<h1>Report an Item</h1>
+<p class="muted">
+Submit a lost or found item.
+</p>
+</div>
+
+<div class="form">
+
+<div id="reportMessage" class="message"></div>
+
+<form onsubmit="submitReport(event)">
+
+<div class="form-grid">
+
+<div>
+
+<label>Report Type</label>
+
+<select id="reportType" required>
+
+<option value="">Select</option>
+<option value="Lost">Lost</option>
+<option value="Found">Found</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Item Name</label>
+
+<input
+id="itemName"
+placeholder="Example: Black wallet"
+required>
+
+</div>
+
+<div>
+
+<label>Category</label>
+
+<select id="itemCategory" required>
+
+<option value="">Select Category</option>
+<option>ID & Cards</option>
+<option>School Supplies</option>
+<option>Bags</option>
+<option>Clothing</option>
+<option>Electronics</option>
+<option>Accessories</option>
+<option>Other</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Date</label>
+
+<input
+id="itemDate"
+type="date"
+required>
+
+</div>
+
+<div class="full">
+
+<label>General Location</label>
+
+<input
+id="itemLocation"
+placeholder="Example: Grade 12 Building"
+required>
+
+</div>
+
+<div class="full">
+
+<label>Description</label>
+
+<textarea
+id="itemDescription"
+placeholder="Describe the item..."
+required></textarea>
+
+</div>
+
+<div class="full">
+
+<label>Additional Information</label>
+
+<textarea
+id="itemAdditional"
+placeholder="Color, markings, identifying details, etc."></textarea>
+
+</div>
+
+<div class="full">
+
+<label>Photo</label>
+
+<input
+id="itemPhoto"
+type="file"
+accept="image/*">
+
+</div>
+
+</div>
+
+<br>
+
+<button class="btn primary" type="submit">
+Submit Report
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard" class="page section hide">
+
+<div class="container">
+
+<div class="title">
+<h1>My Dashboard</h1>
+<p>
+Welcome, <b id="userName"></b>
+</p>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+Pending
+<strong id="pendingCount">0</strong>
+</div>
+
+<div class="stat">
+Approved
+<strong id="approvedCount">0</strong>
+</div>
+
+<div class="stat">
+Rejected
+<strong id="rejectedCount">0</strong>
+</div>
+
+<div class="stat">
+My Claims
+<strong id="claimCount">0</strong>
+</div>
+
+</div>
+
+<button
+class="btn primary"
+onclick="showPage('report')">
++ Report Item
+</button>
+
+<br><br>
+
+<div class="title">
+<h2>My Reports</h2>
+</div>
+
+<div id="myReports"></div>
+
+<br><br>
+
+<div class="title">
+<h2>My Claims</h2>
+</div>
+
+<div id="myClaims"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= DETAILS ================= -->
+
+<section id="details" class="page section hide">
+
+<div class="container">
+
+<button
+class="btn secondary"
+onclick="showPage('browse')">
+← Back
+</button>
+
+<div id="detailsContent"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= CLAIM ================= -->
+
+<section id="claim" class="page section hide">
+
+<div class="container">
+
+<div class="title">
+<h1>Submit a Claim</h1>
+<p class="muted">
+Tell us why you believe this item belongs to you.
+</p>
+</div>
+
+<div id="claimItem" class="card"></div>
+
+<br>
+
+<div class="form">
+
+<div id="claimMessage" class="message"></div>
+
+<form onsubmit="submitClaim(event)">
+
+<label>Why do you believe this is your item?</label>
+
+<textarea
+id="claimExplanation"
+placeholder="Explain how you can identify the item."
+required></textarea>
+
+<label>
+Additional Identifying Information
+</label>
+
+<textarea
+id="claimAdditional"
+placeholder="Add details only you would know."></textarea>
+
+<br>
+
+<button class="btn primary">
+Submit Claim
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= ADMIN LOGIN ================= -->
+
+<section id="adminLogin" class="page auth hide">
+
+<div class="auth-box">
+
+<h1>Admin Login</h1>
+
+<p class="muted">
+Administrator access only.
+</p>
+
+<div id="adminLoginMessage" class="message"></div>
+
+<form onsubmit="adminLogin(event)">
+
+<label>Admin Username</label>
+
+<input
+id="adminUsername"
+required>
+
+<label>Password</label>
+
+<input
+id="adminPassword"
+type="password"
+required>
+
+<br>
+
+<button class="btn primary">
+Login as Admin
+</button>
+
+</form>
+
+<br>
+
+<p class="muted">
+Demo: admin / admin123
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ================= ADMIN ================= -->
+
+<section id="admin" class="page section hide">
+
+<div class="container">
+
+<div class="admin-head">
+
+<h1>Administrator Dashboard</h1>
+
+<p>
+MNHS Lost & Found Management
+</p>
+
+</div>
+
+<br>
+
+<div class="stats">
+
+<div class="stat">
+Total Reports
+<strong id="totalReports">0</strong>
+</div>
+
+<div class="stat">
+Pending
+<strong id="adminPending">0</strong>
+</div>
+
+<div class="stat">
+Approved
+<strong id="adminApproved">0</strong>
+</div>
+
+<div class="stat">
+Rejected
+<strong id="adminRejected">0</strong>
+</div>
+
+<div class="stat">
+Claims
+<strong id="totalClaims">0</strong>
+</div>
+
+<div class="stat">
+Resolved
+<strong id="resolvedItems">0</strong>
+</div>
+
+<div class="stat">
+Users
+<strong id="totalUsers">0</strong>
+</div>
+
+</div>
+
+<div class="card">
+
+<button
+class="btn primary"
+onclick="adminTab('reports')">
+Reports
+</button>
+
+<button
+class="btn secondary"
+onclick="adminTab('claims')">
+Claims
+</button>
+
+<button
+class="btn secondary"
+onclick="adminTab('users')">
+Users
+</button>
+
+<button
+class="btn danger"
+onclick="adminLogout()">
+Logout
+</button>
+
+</div>
+
+<br>
+
+<!-- ADMIN REPORTS -->
+
+<div id="adminReports">
+
+<h2>Manage Reports</h2>
+
+<br>
+
+<div id="adminReportsList"></div>
+
+</div>
+
+
+<!-- ADMIN CLAIMS -->
+
+<div id="adminClaims" class="hide">
+
+<h2>Manage Claims</h2>
+
+<br>
+
+<div id="adminClaimsList"></div>
+
+</div>
+
+
+<!-- ADMIN USERS -->
+
+<div id="adminUsers" class="hide">
+
+<h2>Manage Users</h2>
+
+<br>
+
+<div id="adminUsersList"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<footer class="footer">
+
+<div class="container">
+
+<h3>MNHS Lost & Found</h3>
+
+<p>
+Marangal National High School
+</p>
+
+</div>
+
+</footer>
+
+
+<script>
+/* =====================================================
+   STORAGE
+===================================================== */
+
+const USERS_KEY = "mnhs_users_single";
+const REPORTS_KEY = "mnhs_reports_single";
+const CLAIMS_KEY = "mnhs_claims_single";
+const SESSION_KEY = "mnhs_session_single";
+
+
+function users() {
+  return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+}
+
+function reports() {
+  return JSON.parse(localStorage.getItem(REPORTS_KEY) || "[]");
+}
+
+function claims() {
+  return JSON.parse(localStorage.getItem(CLAIMS_KEY) || "[]");
+}
+
+function saveUsers(data) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(data));
+}
+
+function saveReports(data) {
+  localStorage.setItem(REPORTS_KEY, JSON.stringify(data));
+}
+
+function saveClaims(data) {
+  localStorage.setItem(CLAIMS_KEY, JSON.stringify(data));
+}
+
+function currentUser() {
+  const id = localStorage.getItem(SESSION_KEY);
+  if (!id) return null;
+
+  return users().find(u => u.id === id) || null;
+}
+
+function id() {
+  return Date.now().toString(36) +
+    Math.random().toString(36).slice(2, 7);
+}
+
+function escapeText(text) {
+  return String(text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function dateText(value) {
+  if (!value) return "N/A";
+
+  return new Date(value).toLocaleDateString("en-PH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+}
+
+
+/* =====================================================
+   SETUP
+===================================================== */
+
+function setup() {
+
+  let allUsers = users();
+
+  const adminExists = allUsers.some(
+    u => u.username === "admin"
+  );
+
+  if (!adminExists) {
+
+    allUsers.push({
+      id: id(),
+      name: "System Administrator",
+      username: "admin",
+      password: "admin123",
+      role: "admin"
+    });
+
+    saveUsers(allUsers);
+  }
+
+  updateNav();
+
+  renderItems();
+  renderSpecial("Lost");
+  renderSpecial("Found");
+}
+
+
+/* =====================================================
+   PAGE NAVIGATION
+===================================================== */
+
+function showPage(page) {
+
+  document.querySelectorAll(".page").forEach(section => {
+    section.classList.add("hide");
+  });
+
+  const target = document.getElementById(page);
+
+  if (target) {
+    target.classList.remove("hide");
+  }
+
+  document.getElementById("navlinks")
+    .classList.remove("open");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+
+  if (page === "browse") {
+    renderItems();
+  }
+
+  if (page === "lost") {
+    renderSpecial("Lost");
+  }
+
+  if (page === "found") {
+    renderSpecial("Found");
+  }
+
+  if (page === "dashboard") {
+    if (!currentUser()) {
+      showPage("login");
+      return;
+    }
+
+    loadDashboard();
+  }
+
+  if (page === "admin") {
+    loadAdmin();
+  }
+
+  if (page === "adminLogin") {
+    const message =
+      document.getElementById("adminLoginMessage");
+
+    if (message) {
+      message.className = "message";
+      message.textContent = "";
+    }
+  }
+}
+
+
+function toggleMenu() {
+  document
+    .getElementById("navlinks")
+    .classList.toggle("open");
+}
+
+
+/* =====================================================
+   NAVIGATION USER STATE
+===================================================== */
+
+function updateNav() {
+
+  const user = currentUser();
+
+  const dashboard =
+    document.getElementById("dashboardLink");
+
+  const login =
+    document.getElementById("loginLink");
+
+  const register =
+    document.getElementById("registerLink");
+
+  const logoutBtn =
+    document.getElementById("logoutLink");
+
+
+  if (user) {
+
+    dashboard.classList.remove("hide");
+    logoutBtn.classList.remove("hide");
+
+    login.classList.add("hide");
+    register.classList.add("hide");
+
+  } else {
+
+    dashboard.classList.add("hide");
+    logoutBtn.classList.add("hide");
+
+    login.classList.remove("hide");
+    register.classList.remove("hide");
+  }
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+function login(event) {
+
+  event.preventDefault();
+
+  const username =
+    document.getElementById("loginUsername")
+      .value.trim();
+
+  const password =
+    document.getElementById("loginPassword")
+      .value;
+
+  const message =
+    document.getElementById("loginMessage");
+
+
+  const user = users().find(u =>
+    (u.username.toLowerCase() === username.toLowerCase()) &&
+    u.password === password &&
+    u.role === "user"
+  );
+
+
+  if (!user) {
+
+    message.textContent =
+      "Invalid username or password.";
+
+    message.className =
+      "message show err";
+
+    return;
+  }
+
+
+  localStorage.setItem(
+    SESSION_KEY,
+    user.id
+  );
+
+  message.textContent =
+    "Login successful.";
+
+  message.className =
+    "message show ok";
+
+  updateNav();
+
+  setTimeout(() => {
+    showPage("dashboard");
+  }, 400);
+}
+
+
+/* =====================================================
+   REGISTER
+===================================================== */
+
+function register(event) {
+
+  event.preventDefault();
+
+  const name =
+    document.getElementById("regName")
+      .value.trim();
+
+  const username =
+    document.getElementById("regUsername")
+      .value.trim();
+
+  const password =
+    document.getElementById("regPassword")
+      .value;
+
+  const confirm =
+    document.getElementById("regConfirm")
+      .value;
+
+  const message =
+    document.getElementById("registerMessage");
+
+
+  if (password !== confirm) {
+
+    message.textContent =
+      "Passwords do not match.";
+
+    message.className =
+      "message show err";
+
+    return;
+  }
+
+
+  const allUsers = users();
+
+  const exists = allUsers.some(u =>
+    u.username.toLowerCase() ===
+    username.toLowerCase()
+  );
+
+
+  if (exists) {
+
+    message.textContent =
+      "Username already exists.";
+
+    message.className =
+      "message show err";
+
+    return;
+  }
+
+
+  const newUser = {
+
+    id: id(),
+
+    name: name,
+
+    username: username,
+
+    password: password,
+
+    role: "user"
+  };
+
+
+  allUsers.push(newUser);
+
+  saveUsers(allUsers);
+
+
+  message.textContent =
+    "Registration successful. You can now login.";
+
+  message.className =
+    "message show ok";
+
+
+  document.getElementById("regName").value = "";
+  document.getElementById("regUsername").value = "";
+  document.getElementById("regPassword").value = "";
+  document.getElementById("regConfirm").value = "";
+
+
+  setTimeout(() => {
+    showPage("login");
+  }, 700);
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout() {
+
+  localStorage.removeItem(SESSION_KEY);
+
+  updateNav();
+
+  showPage("home");
+}
+
+
+/* =====================================================
+   LOGIN REQUIREMENT
+===================================================== */
+
+function requireLoginFor(page) {
+
+  if (!currentUser()) {
+
+    showPage("login");
+
+    const message =
+      document.getElementById("loginMessage");
+
+    message.textContent =
+      "Please login first.";
+
+    message.className =
+      "message show err";
+
+    return;
+  }
+
+  showPage(page);
+}
+
+
+/* =====================================================
+   REPORT ITEM
+===================================================== */
+
+function submitReport(event) {
+
+  event.preventDefault();
+
+  const user = currentUser();
+
+  if (!user) {
+    showPage("login");
+    return;
+  }
+
+
+  const type =
+    document.getElementById("reportType").value;
+
+  const itemName =
+    document.getElementById("itemName")
+      .value.trim();
+
+  const category =
+    document.getElementById("itemCategory").value;
+
+  const date =
+    document.getElementById("itemDate").value;
+
+  const location =
+    document.getElementById("itemLocation")
+      .value.trim();
+
+  const description =
+    document.getElementById("itemDescription")
+      .value.trim();
+
+  const additional =
+    document.getElementById("itemAdditional")
+      .value.trim();
+
+  const photoInput =
+    document.getElementById("itemPhoto");
+
+
+  const createReport = photo => {
+
+    const newReport = {
+
+      id: id(),
+
+      userId: user.id,
+
+      type: type,
+
+      itemName: itemName,
+
+      category: category,
+
+      date: date,
+
+      location: location,
+
+      description: description,
+
+      additional: additional,
+
+      photo: photo || "",
+
+      status: "Pending",
+
+      createdAt: new Date().toISOString(),
+
+      resolved: false
+    };
+
+
+    const allReports = reports();
+
+    allReports.push(newReport);
+
+    saveReports(allReports);
+
+
+    const message =
+      document.getElementById("reportMessage");
+
+    message.textContent =
+      "Report submitted successfully. It is now Pending for admin approval.";
+
+    message.className =
+      "message show ok";
+
+
+    document.getElementById("reportType").value = "";
+    document.getElementById("itemName").value = "";
+    document.getElementById("itemCategory").value = "";
+    document.getElementById("itemDate").value = "";
+    document.getElementById("itemLocation").value = "";
+    document.getElementById("itemDescription").value = "";
+    document.getElementById("itemAdditional").value = "";
+    document.getElementById("itemPhoto").value = "";
+
+
+    setTimeout(() => {
+      showPage("dashboard");
+    }, 800);
+  };
+
+
+  if (photoInput.files.length > 0) {
+
+    const file = photoInput.files[0];
+
+    if (file.size > 1.5 * 1024 * 1024) {
+
+      const message =
+        document.getElementById("reportMessage");
+
+      message.textContent =
+        "Photo is too large. Please use an image below 1.5 MB.";
+
+      message.className =
+        "message show err";
+
+      return;
+    }
+
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      createReport(e.target.result);
+    };
+
+    reader.readAsDataURL(file);
+
+  } else {
+
+    createReport("");
+  }
+}
+
+
+/* =====================================================
+   ITEM CARD
+===================================================== */
+
+function card(report) {
+
+  const image = report.photo
+    ? `<img class="item-img"
+        src="${report.photo}"
+        alt="${escapeText(report.itemName)}">`
+    : `<div class="placeholder">📦</div>`;
+
+
+  const statusClass =
+    report.type.toLowerCase() === "lost"
+      ? "lost"
+      : "found";
+
+
+  return `
+
+    <div class="item-card">
+
+      ${image}
+
+      <div class="item-body">
+
+        <span class="badge ${statusClass}">
+          ${escapeText(report.type)}
+        </span>
+
+        <span class="badge">
+          ${escapeText(report.category)}
+        </span>
+
+        <h3>
+          ${escapeText(report.itemName)}
+        </h3>
+
+        <p class="muted">
+          ${escapeText(report.location)}
+        </p>
+
+        <p>
+          ${escapeText(
+            report.description.substring(0, 100)
+          )}
+          ${report.description.length > 100 ? "..." : ""}
+        </p>
+
+        <small class="muted">
+          Reported: ${dateText(report.date)}
+        </small>
+
+        <br>
+
+        <button
+          class="btn primary"
+          onclick="openDetails('${report.id}')">
+          View Details
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =====================================================
+   PUBLIC REPORTS
+===================================================== */
+
+function publicReports() {
+
+  return reports().filter(r =>
+    r.status === "Approved" &&
+    !r.resolved
+  );
+}
+
+
+/* =====================================================
+   BROWSE ITEMS
+===================================================== */
+
+function renderItems() {
+
+  const container =
+    document.getElementById("itemsList");
+
+  if (!container) return;
+
+
+  let data = publicReports();
+
+
+  const search =
+    document.getElementById("search")?.value
+      .toLowerCase()
+      .trim() || "";
+
+
+  const type =
+    document.getElementById("typeFilter")?.value || "";
+
+
+  const category =
+    document.getElementById("categoryFilter")?.value || "";
+
+
+  const sort =
+    document.getElementById("sortFilter")?.value ||
+    "newest";
+
+
+  data = data.filter(r => {
+
+    const matchesSearch =
+      r.itemName.toLowerCase()
+        .includes(search);
+
+    const matchesType =
+      !type || r.type === type;
+
+    const matchesCategory =
+      !category || r.category === category;
+
+    return (
+      matchesSearch &&
+      matchesType &&
+      matchesCategory
+    );
+  });
+
+
+  data.sort((a,b) => {
+
+    const first =
+      new Date(a.createdAt);
+
+    const second =
+      new Date(b.createdAt);
+
+    return sort === "newest"
+      ? second - first
+      : first - second;
+  });
+
+
+  if (data.length === 0) {
+
+    container.innerHTML = `
+      <div class="empty">
+        No approved items found.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    data.map(card).join("");
+}
+
+
+/* =====================================================
+   LOST / FOUND
+===================================================== */
+
+function renderSpecial(type) {
+
+  const container =
+    document.getElementById(
+      type === "Lost"
+        ? "lostList"
+        : "foundList"
+    );
+
+  if (!container) return;
+
+
+  let data =
+    publicReports()
+      .filter(r => r.type === type);
+
+
+  const search =
+    document.getElementById(
+      type === "Lost"
+        ? "lostSearch"
+        : "foundSearch"
+    )?.value
+      .toLowerCase()
+      .trim() || "";
+
+
+  const category =
+    document.getElementById(
+      type === "Lost"
+        ? "lostCategory"
+        : "foundCategory"
+    )?.value || "";
+
+
+  data = data.filter(r => {
+
+    const matchesSearch =
+      r.itemName.toLowerCase()
+        .includes(search);
+
+    const matchesCategory =
+      !category || r.category === category;
+
+    return matchesSearch &&
+           matchesCategory;
+  });
+
+
+  if (data.length === 0) {
+
+    container.innerHTML = `
+      <div class="empty">
+        No approved ${type.toLowerCase()} items found.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    data.map(card).join("");
+}
+
+
+/* =====================================================
+   CLEAR FILTERS
+===================================================== */
+
+function clearFilters() {
+
+  document.getElementById("search").value = "";
+  document.getElementById("typeFilter").value = "";
+  document.getElementById("categoryFilter").value = "";
+  document.getElementById("sortFilter").value = "newest";
+
+  renderItems();
+}
+
+
+/* =====================================================
+   ITEM DETAILS
+===================================================== */
+
+function openDetails(reportId) {
+
+  const report =
+    reports().find(r => r.id === reportId);
+
+  if (!report) return;
+
+
+  const container =
+    document.getElementById("detailsContent");
+
+
+  const image = report.photo
+    ? `<img
+        src="${report.photo}"
+        alt="${escapeText(report.itemName)}">`
+    : `<div class="placeholder">
+         📦
+       </div>`;
+
+
+  const statusClass =
+    report.type.toLowerCase() === "lost"
+      ? "lost"
+      : "found";
+
+
+  container.innerHTML = `
+
+    <div class="detail">
+
+      <div>
+        ${image}
+      </div>
+
+      <div>
+
+        <span class="badge ${statusClass}">
+          ${escapeText(report.type)}
+        </span>
+
+        <span class="badge">
+          ${escapeText(report.category)}
+        </span>
+
+        <h1>
+          ${escapeText(report.itemName)}
+        </h1>
+
+        <br>
+
+        <p>
+          <b>Date:</b>
+          ${dateText(report.date)}
+        </p>
+
+        <p>
+          <b>General Location:</b>
+          ${escapeText(report.location)}
+        </p>
+
+        <br>
+
+        <h3>Description</h3>
+
+        <p>
+          ${escapeText(report.description)}
+        </p>
+
+        <br>
+
+        <h3>Additional Information</h3>
+
+        <p>
+          ${escapeText(
+            report.additional || "None provided."
+          )}
+        </p>
+
+        <br>
+
+        <button
+          class="btn primary"
+          onclick="startClaim('${report.id}')">
+          I Believe This Is My Item
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+
+  showPage("details");
+}
+
+
+/* =====================================================
+   START CLAIM
+===================================================== */
+
+let selectedClaimReport = null;
+
+
+function startClaim(reportId) {
+
+  if (!currentUser()) {
+
+    showPage("login");
+
+    const message =
+      document.getElementById("loginMessage");
+
+    message.textContent =
+      "Please login before submitting a claim.";
+
+    message.className =
+      "message show err";
+
+    return;
+  }
+
+
+  selectedClaimReport = reportId;
+
+  loadClaim();
+
+  showPage("claim");
+}
+
+
+/* =====================================================
+   LOAD CLAIM
+===================================================== */
+
+function loadClaim() {
+
+  const report =
+    reports().find(
+      r => r.id === selectedClaimReport
+    );
+
+  const container =
+    document.getElementById("claimItem");
+
+
+  if (!report) {
+
+    container.innerHTML =
+      "Item not found.";
+
+    return;
+  }
+
+
+  container.innerHTML = `
+
+    <h2>
+      ${escapeText(report.itemName)}
+    </h2>
+
+    <p>
+      <span class="badge">
+        ${escapeText(report.category)}
+      </span>
+
+      <span class="badge">
+        ${escapeText(report.type)}
+      </span>
+    </p>
+
+    <p class="muted">
+      ${escapeText(report.location)}
+    </p>
+  `;
+}
+
+
+/* =====================================================
+   SUBMIT CLAIM
+===================================================== */
+
+function submitClaim(event) {
+
+  event.preventDefault();
+
+
+  const user = currentUser();
+
+  if (!user) {
+
+    showPage("login");
+
+    return;
+  }
+
+
+  const existing =
+    claims().some(c =>
+      c.reportId === selectedClaimReport &&
+      c.userId === user.id &&
+      c.status === "Pending"
+    );
+
+
+  const message =
+    document.getElementById("claimMessage");
+
+
+  if (existing) {
+
+    message.textContent =
+      "You already have a pending claim for this item.";
+
+    message.className =
+      "message show err";
+
+    return;
+  }
+
+
+  const explanation =
+    document.getElementById("claimExplanation")
+      .value.trim();
+
+
+  const additional =
+    document.getElementById("claimAdditional")
+      .value.trim();
+
+
+  const newClaim = {
+
+    id: id(),
+
+    reportId: selectedClaimReport,
+
+    userId: user.id,
+
+    explanation: explanation,
+
+    additional: additional,
+
+    status: "Pending",
+
+    createdAt: new Date().toISOString()
+  };
+
+
+  const allClaims = claims();
+
+  allClaims.push(newClaim);
+
+  saveClaims(allClaims);
+
+
+  message.textContent =
+    "Claim submitted successfully.";
+
+  message.className =
+    "message show ok";
+
+
+  document.getElementById("claimExplanation").value = "";
+  document.getElementById("claimAdditional").value = "";
+
+
+  setTimeout(() => {
+
+    showPage("dashboard");
+
+  }, 700);
+}
+
+
+/* =====================================================
+   USER DASHBOARD
+===================================================== */
+
+function loadDashboard() {
+
+  const user = currentUser();
+
+  if (!user) {
+
+    showPage("login");
+
+    return;
+  }
+
+
+  document.getElementById("userName")
+    .textContent = user.name;
+
+
+  const myReports =
+    reports().filter(
+      r => r.userId === user.id
+    );
+
+
+  const myClaims =
+    claims().filter(
+      c => c.userId === user.id
+    );
+
+
+  document.getElementById("pendingCount")
+    .textContent =
+      myReports.filter(
+        r => r.status === "Pending"
+      ).length;
+
+
+  document.getElementById("approvedCount")
+    .textContent =
+      myReports.filter(
+        r => r.status === "Approved"
+      ).length;
+
+
+  document.getElementById("rejectedCount")
+    .textContent =
+      myReports.filter(
+        r => r.status === "Rejected"
+      ).length;
+
+
+  document.getElementById("claimCount")
+    .textContent =
+      myClaims.length;
+
+
+  renderMyReports(myReports);
+
+  renderMyClaims(myClaims);
+}
+
+
+/* =====================================================
+   MY REPORTS
+===================================================== */
+
+function renderMyReports(data) {
+
+  const container =
+    document.getElementById("myReports");
+
+
+  if (data.length === 0) {
+
+    container.innerHTML = `
+      <div class="empty">
+        You have no reports yet.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML = data.map(r => `
+
+    <div class="card">
+
+      <h3>
+        ${escapeText(r.itemName)}
+      </h3>
+
+      <p>
+
+        <span class="badge">
+          ${escapeText(r.type)}
+        </span>
+
+        <span class="badge ${r.status.toLowerCase()}">
+          ${escapeText(r.status)}
+        </span>
+
+        ${r.resolved
+          ? `<span class="badge resolved">Resolved</span>`
+          : ""
+        }
+
+      </p>
+
+      <p>
+        ${escapeText(r.category)}
+      </p>
+
+      <p class="muted">
+        ${dateText(r.date)}
+      </p>
+
+    </div>
+
+    <br>
+
+  `).join("");
+}
+
+
+/* =====================================================
+   MY CLAIMS
+===================================================== */
+
+function renderMyClaims(data) {
+
+  const container =
+    document.getElementById("myClaims");
+
+
+  if (data.length === 0) {
+
+    container.innerHTML = `
+      <div class="empty">
+        You have no claims yet.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML = data.map(c => {
+
+    const report =
+      reports().find(
+        r => r.id === c.reportId
+      );
+
+
+    return `
+
+      <div class="card">
+
+        <h3>
+          ${report
+            ? escapeText(report.itemName)
+            : "Deleted Item"
+          }
+        </h3>
+
+        <p>
+          <span class="badge ${c.status.toLowerCase()}">
+            ${escapeText(c.status)}
+          </span>
+        </p>
+
+        <p>
+          ${escapeText(c.explanation)}
+        </p>
+
+        <p class="muted">
+          Submitted: ${dateText(c.createdAt)}
+        </p>
+
+      </div>
+
+      <br>
+
+    `;
+
+  }).join("");
+}
+
+
+/* =====================================================
+   ADMIN LOGIN
+===================================================== */
+
+function openAdmin() {
+
+  showPage("adminLogin");
+}
+
+
+function adminLogin(event) {
+
+  event.preventDefault();
+
+
+  const username =
+    document.getElementById("adminUsername")
+      .value.trim();
+
+  const password =
+    document.getElementById("adminPassword")
+      .value;
+
+
+  const message =
+    document.getElementById("adminLoginMessage");
+
+
+  const admin =
+    users().find(u =>
+      u.username === username &&
+      u.password === password &&
+      u.role === "admin"
+    );
+
+
+  if (!admin) {
+
+    message.textContent =
+      "Invalid admin username or password.";
+
+    message.className =
+      "message show err";
+
+    return;
+  }
+
+
+  localStorage.setItem(
+    SESSION_KEY,
+    admin.id
+  );
+
+
+  message.textContent =
+    "Admin login successful.";
+
+  message.className =
+    "message show ok";
+
+
+  setTimeout(() => {
+
+    showPage("admin");
+
+  }, 500);
+}
+
+
+/* =====================================================
+   ADMIN CHECK
+===================================================== */
+
+function isAdmin() {
+
+  const user = currentUser();
+
+  return user && user.role === "admin";
+}
+
+
+/* =====================================================
+   LOAD ADMIN
+===================================================== */
+
+function loadAdmin() {
+
+  if (!isAdmin()) {
+
+    showPage("adminLogin");
+
+    return;
+  }
+
+
+  const allReports = reports();
+
+  const allClaims = claims();
+
+  const allUsers = users();
+
+
+  document.getElementById("totalReports")
+    .textContent = allReports.length;
+
+
+  document.getElementById("adminPending")
+    .textContent =
+      allReports.filter(
+        r => r.status === "Pending"
+      ).length;
+
+
+  document.getElementById("adminApproved")
+    .textContent =
+      allReports.filter(
+        r => r.status === "Approved"
+      ).length;
+
+
+  document.getElementById("adminRejected")
+    .textContent =
+      allReports.filter(
+        r => r.status === "Rejected"
+      ).length;
+
+
+  document.getElementById("totalClaims")
+    .textContent = allClaims.length;
+
+
+  document.getElementById("resolvedItems")
+    .textContent =
+      allReports.filter(
+        r => r.resolved
+      ).length;
+
+
+  document.getElementById("totalUsers")
+    .textContent =
+      allUsers.filter(
+        u => u.role === "user"
+      ).length;
+
+
+  renderAdminReports();
+
+  renderAdminClaims();
+
+  renderAdminUsers();
+}
+
+
+/* =====================================================
+   ADMIN TABS
+===================================================== */
+
+function adminTab(tab) {
+
+  document
+    .getElementById("adminReports")
+    .classList.add("hide");
+
+  document
+    .getElementById("adminClaims")
+    .classList.add("hide");
+
+  document
+    .getElementById("adminUsers")
+    .classList.add("hide");
+
+
+  if (tab === "reports") {
+
+    document
+      .getElementById("adminReports")
+      .classList.remove("hide");
+
+  }
+
+
+  if (tab === "claims") {
+
+    document
+      .getElementById("adminClaims")
+      .classList.remove("hide");
+
+  }
+
+
+  if (tab === "users") {
+
+    document
+      .getElementById("adminUsers")
+      .classList.remove("hide");
+
+  }
+}
+
+
+/* =====================================================
+   ADMIN REPORTS
+===================================================== */
+
+function renderAdminReports() {
+
+  const container =
+    document.getElementById(
+      "adminReportsList"
+    );
+
+
+  const data = reports();
+
+
+  if (data.length === 0) {
+
+    container.innerHTML = `
+      <div class="empty">
+        No reports yet.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML = `
+
+    <div class="table">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Item</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>User</th>
+            <th>Status</th>
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${data.map(r => {
+
+            const owner =
+              users().find(
+                u => u.id === r.userId
+              );
+
+
+            return `
+
+              <tr>
+
+                <td>
+                  ${escapeText(r.itemName)}
+                </td>
+
+                <td>
+                  ${escapeText(r.type)}
+                </td>
+
+                <td>
+                  ${escapeText(r.category)}
+                </td>
+
+                <td>
+                  ${owner
+                    ? escapeText(owner.name)
+                    : "Unknown"
+                  }
+                </td>
+
+                <td>
+
+                  <span class="badge ${
+                    r.status.toLowerCase()
+                  }">
+
+                    ${escapeText(r.status)}
+
+                  </span>
+
+                  ${
+                    r.resolved
+                    ? `<span class="badge resolved">
+                         Resolved
+                       </span>`
+                    : ""
+                  }
+
+                </td>
+
+                <td>
+
+                  <button
+                    class="btn success"
+                    onclick="changeReport('${r.id}','Approved')">
+                    Approve
+                  </button>
+
+                  <button
+                    class="btn warning"
+                    onclick="changeReport('${r.id}','Rejected')">
+                    Reject
+                  </button>
+
+                  <button
+                    class="btn primary"
+                    onclick="changeReport('${r.id}','Resolved')">
+                    Resolve
+                  </button>
+
+                  <button
+                    class="btn danger"
+                    onclick="deleteReport('${r.id}')">
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+
+            `;
+
+          }).join("")}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+}
+
+
+/* =====================================================
+   CHANGE REPORT STATUS
+===================================================== */
+
+function changeReport(reportId, status) {
+
+  if (!isAdmin()) {
+
+    showPage("adminLogin");
+
+    return;
+  }
+
+
+  const allReports = reports();
+
+  const report =
+    allReports.find(
+      r => r.id === reportId
+    );
+
+
+  if (!report) return;
+
+
+  if (status === "Resolved") {
+
+    report.resolved = true;
+
+    report.status = "Approved";
+
+  } else {
+
+    report.status = status;
+
+    if (status !== "Approved") {
+      report.resolved = false;
+    }
+  }
+
+
+  saveReports(allReports);
+
+  loadAdmin();
+}
+
+
+/* =====================================================
+   DELETE REPORT
+===================================================== */
+
+function deleteReport(reportId) {
+
+  if (!isAdmin()) return;
+
+
+  const confirmDelete =
+    confirm(
+      "Delete this report?"
+    );
+
+
+  if (!confirmDelete) return;
+
+
+  const filtered =
+    reports().filter(
+      r => r.id !== reportId
+    );
+
+
+  saveReports(filtered);
+
+  loadAdmin();
+}
+
+
+/* =====================================================
+   ADMIN CLAIMS
+===================================================== */
+
+function renderAdminClaims() {
+
+  const container =
+    document.getElementById(
+      "adminClaimsList"
+    );
+
+
+  const data = claims();
+
+
+  if (data.length === 0) {
+
+    container.innerHTML = `
+      <div class="empty">
+        No claims yet.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML = `
+
+    <div class="table">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Item</th>
+            <th>Claimant</th>
+            <th>Explanation</th>
+            <th>Status</th>
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${data.map(c => {
+
+            const report =
+              reports().find(
+                r => r.id === c.reportId
+              );
+
+
+            const claimant =
+              users().find(
+                u => u.id === c.userId
+              );
+
+
+            return `
+
+              <tr>
+
+                <td>
+                  ${
+                    report
+                    ? escapeText(report.itemName)
+                    : "Deleted Item"
+                  }
+                </td>
+
+                <td>
+                  ${
+                    claimant
+                    ? escapeText(claimant.name)
+                    : "Unknown"
+                  }
+                </td>
+
+                <td>
+                  ${escapeText(c.explanation)}
+                </td>
+
+                <td>
+
+                  <span class="badge ${
+                    c.status.toLowerCase()
+                  }">
+
+                    ${escapeText(c.status)}
+
+                  </span>
+
+                </td>
+
+                <td>
+
+                  <button
+                    class="btn success"
+                    onclick="changeClaim('${c.id}','Approved')">
+                    Approve
+                  </button>
+
+                  <button
+                    class="btn danger"
+                    onclick="changeClaim('${c.id}','Rejected')">
+                    Reject
+                  </button>
+
+                </td>
+
+              </tr>
+
+            `;
+
+          }).join("")}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+}
+
+
+/* =====================================================
+   CHANGE CLAIM
+===================================================== */
+
+function changeClaim(claimId, status) {
+
+  if (!isAdmin()) return;
+
+
+  const allClaims = claims();
+
+
+  const claim =
+    allClaims.find(
+      c => c.id === claimId
+    );
+
+
+  if (!claim) return;
+
+
+  claim.status = status;
+
+
+  saveClaims(allClaims);
+
+
+  if (status === "Approved") {
+
+    const allReports = reports();
+
+
+    const report =
+      allReports.find(
+        r => r.id === claim.reportId
+      );
+
+
+    if (report) {
+
+      report.resolved = true;
+
+      report.status = "Approved";
+
+      saveReports(allReports);
+    }
+  }
+
+
+  loadAdmin();
+}
+
+
+/* =====================================================
+   ADMIN USERS
+===================================================== */
+
+function renderAdminUsers() {
+
+  const container =
+    document.getElementById(
+      "adminUsersList"
+    );
+
+
+  const data =
+    users().filter(
+      u => u.role === "user"
+    );
+
+
+  if (data.length === 0) {
+
+    container.innerHTML = `
+      <div class="empty">
+        No registered users.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML = `
+
+    <div class="table">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Name</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${data.map(u => `
+
+            <tr>
+
+              <td>
+                ${escapeText(u.name)}
+              </td>
+
+              <td>
+                ${escapeText(u.username)}
+              </td>
+
+              <td>
+                ${escapeText(u.role)}
+              </td>
+
+              <td>
+
+                <button
+                  class="btn danger"
+                  onclick="deleteUser('${u.id}')">
+                  Delete
+                </button>
+
+              </td>
+
+            </tr>
+
+          `).join("")}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+}
+
+
+/* =====================================================
+   DELETE USER
+===================================================== */
+
+function deleteUser(userId) {
+
+  if (!isAdmin()) return;
+
+
+  if (!confirm("Delete this user?")) {
+    return;
+  }
+
+
+  const filtered =
+    users().filter(
+      u => u.id !== userId
+    );
+
+
+  saveUsers(filtered);
+
+
+  loadAdmin();
+}
+
+
+/* =====================================================
+   ADMIN LOGOUT
+===================================================== */
+
+function adminLogout() {
+
+  localStorage.removeItem(SESSION_KEY);
+
+  updateNav();
+
+  showPage("home");
+}
+
+
+/* =====================================================
+   START SYSTEM
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    setup();
+
+  }
+);
+
+
+/* =====================================================
+   ADMIN ACCESS
+===================================================== */
+
+function openAdminLogin() {
+
+  showPage("adminLogin");
+
+}
+
+</script>
+
+</body>
+</html>
